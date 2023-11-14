@@ -9,35 +9,50 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var image: Image?
-    @State private var inputImage: UIImage?
-    @State private var showingImagePicker = false
+    @State private var filterIntensity = 0.5
     
     var body: some View {
-        VStack {
-            image?
-                .resizable()
-                .scaledToFit()
-            
-            Button("Select Image") {
-                showingImagePicker = true
-            }
-            
-            Button("Save Image") {
-                guard let inputImage = inputImage else { return }
+        NavigationView {
+            VStack {
+                ZStack {
+                    Rectangle()
+                        .fill(.secondary)
+                    
+                    Text("Tap to select a picture")
+                        .foregroundStyle(.white)
+                        .font(.headline)
+                    
+                    image?
+                        .resizable()
+                        .scaledToFit()
+                }
+                .onTapGesture {
+                    //Select an image
+                }
                 
-                let imageSaver = ImageSaver()
-                imageSaver.writeToPhotoAlbum(image: inputImage)
+                HStack {
+                    Text("Intensity")
+                    Slider(value: $filterIntensity)
+                }
+                .padding(.vertical)
+                
+                HStack {
+                    Button("Change Filter") {
+                        //Change Filter
+                    }
+                    
+                    Spacer()
+                    
+                    Button("Save", action: save)
+                }
             }
+            .padding([.horizontal, .bottom])
+            .navigationTitle("InstaFilter")
         }
-        .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(image: $inputImage)
-        }
-        .onChange(of: inputImage, loadImage)
     }
     
-    func loadImage() {
-        guard let inputImage = inputImage else { return }
-        image = Image(uiImage: inputImage)
+    func save() {
+        
     }
 }
 
